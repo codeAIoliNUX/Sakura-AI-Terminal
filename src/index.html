@@ -1,67 +1,37 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Sakura</title>
-    <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <div id="titlebar">
-      <div class="tb-brand">
-        <span id="roll-petal">&#127800;</span>
-        <span class="tb-label">
-          <span class="tb-letter">S</span><span class="tb-letter">A</span
-          ><span class="tb-letter">K</span><span class="tb-letter">U</span
-          ><span class="tb-letter">R</span><span class="tb-letter">A</span>
-        </span>
-      </div>
-      <div id="titlebar-buttons">
-        <button id="btn-toggle-ai" title="Toggle Lumo panel (Ctrl+Space)">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect
-              x="1"
-              y="2"
-              width="14"
-              height="12"
-              rx="2"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-            <line
-              x1="10"
-              y1="2"
-              x2="10"
-              y2="14"
-              stroke="currentColor"
-              stroke-width="1.5"
-            />
-          </svg>
-        </button>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <title>Sakura</title>
+  <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="titlebar">
+    <span class="tb-label"><span id="roll-petal">🌸</span><span class="tb-letters">
+      <span class="tb-letter">S</span><span class="tb-letter">a</span><span class="tb-letter">k</span>
+      <span class="tb-letter">u</span><span class="tb-letter">r</span><span class="tb-letter">a</span>
+    </span></span>
+    <div id="titlebar-buttons">
+      <button id="btn-toggle-ai" title="Toggle Lumo panel (Ctrl+Space)">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="2" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
+          <line x1="10" y1="2" x2="10" y2="14" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+      </button>
     </div>
+  </div>
 
-    <div id="workspace">
-      <div id="terminal-container"></div>
-      <div id="ai-pane" class="hidden">
-        <webview
-          id="lumo-view"
-          src="https://lumo.proton.me"
-          partition="persist:sakura-lumo"
-          allowpopups
-        >
-        </webview>
-      </div>
+  <div id="workspace">
+    <div id="terminal-container"></div>
+    <div id="pane-divider" class="hidden" title="Drag to resize - double-click to reset"></div>
+    <div id="ai-pane" class="hidden">
+      <webview id="lumo-view" src="https://lumo.proton.me" partition="persist:sakura-lumo" allowpopups></webview>
     </div>
+  </div>
 
-    <script src="../node_modules/@xterm/xterm/lib/xterm.js"></script>
-    <script src="../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
-    <script src="renderer.js"></script>
-  </body>
+  <script src="../node_modules/@xterm/xterm/lib/xterm.js"></script>
+  <script src="../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
+  <script src="renderer.js"></script>
+</body>
 </html>
