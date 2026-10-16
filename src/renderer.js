@@ -19,19 +19,22 @@ else if (typeof FitAddonCtor !== 'function') fail('addon-fit did NOT load');
 else if (typeof window.sakura === 'undefined') fail('preload bridge missing');
 else bootOK = true;
 
-// Chat-session state (declared BEFORE any function uses it)
-const STORAGE_KEY = 'sakura_chats';
-let sessions = [];
-let currentSessionId = null;
-try { sessions = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]'); } catch (_) { sessions = []; }
+// ===== AI SELECTOR (single copy) =====
+const aiUrls = {
+  lumo: 'https://lumo.proton.me',
+  deepseek: 'https://chat.deepseek.com'
+};
 
-function saveSessions() { localStorage.setItem(STORAGE_KEY, JSON.stringify(sessions)); }
-
-function startNewSession() {
-  const sess = { id: 'sess_' + Date.now(), started: new Date().toISOString(), messages: [] };
-  sessions.unshift(sess);
-  currentSessionId = sess.id;
-  saveSessions();
+function loadSelectedAI() {
+  const selector = document.getElementById('ai-choice');
+  const frame = document.getElementById('ai-frame');
+  if (!selector || !frame) return;
+  if (selector.value === 'deepseek') {
+    frame.src = 'about:blank';
+    if (window.api) window.api.openAIWindow(aiUrls.deepseek);
+  } else {
+    frame.src = aiUrls[selector.value];
+  }
 }
 
 function initApp() {
@@ -76,7 +79,7 @@ function initApp() {
   const toggleBtn = document.getElementById('btn-toggle-ai');
   const divider = document.getElementById('pane-divider');
 
-  // ===== PANE RESIZE with pointer capture =====
+  // ===== PANE RESIZE =====
   (function paneResize() {
     if (!divider || !aiPane) { fail('divider or ai-pane missing from DOM'); return; }
 
@@ -129,7 +132,7 @@ function initApp() {
     });
   })();
 
-  // ===== PANEL TOGGLE =====
+  // ===== PANEL TOGGLE (button + Ctrl+Space + Escape) =====
   let toggleLocked = false;
   function doToggle() {
     if (toggleLocked || !aiPane) return;
@@ -148,7 +151,7 @@ function initApp() {
   }, true);
   toggleBtn.addEventListener('click', doToggle);
 
-  // ===== KEYBOARD: copy/paste =====
+  // ===== COPY/PASTE =====
   window.addEventListener('keydown', (ev) => {
     const key = ev.key.toLowerCase();
     if ((ev.ctrlKey || ev.metaKey) && key === 'v') {
@@ -164,9 +167,47 @@ function initApp() {
 
   container.addEventListener('mouseup', () => term.focus());
 
-  startNewSession();
+  // ===== AI selector wiring + auto-load =====
+  const selector = document.getElementById('ai-choice');
+  if (selector) selector.addEventListener('change', loadSelectedAI);
+
   term.focus();
 }
 
-// Boot LAST, after every declaration above has executed
+// Boot LAST
 if (bootOK) initApp();
+loadSelectedAI();
+
+// ===== MOUSE COPY/PASTE =====
+(function mouseClipboard() {
+  const container = document.getElementById('terminal-container');
+  if (!container || !window.sakura) return;
+
+  // Auto-copy on selection (mouse drag)
+  container.addEventListener('mouseup', () => {
+    setTimeout(() => {
+      const term = window.__sakuraTerm;
+      if (term) {
+        const sel = term.getSelection();
+        if (sel) window.sakura.copyToClipboard(sel);
+      }
+    }, 10);
+  });
+
+  // Right-click: paste if nothing selected, copy if selection exists
+  container.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+    const term = window.__sakuraTerm;
+    const sel = term ? term.getSelection() : '';
+    if (sel) {
+      window.sakura.copyToClipboard(sel);
+    } else {
+      window.sakura.readClipboard().then((text) => {
+        if (text) {
+          if (term && term.paste) term.paste(text);
+          else window.sakura.sendInput(text);
+        }
+      });
+    }
+  });
+})();

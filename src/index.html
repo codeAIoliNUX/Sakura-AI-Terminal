@@ -1,37 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Sakura</title>
-  <link rel="stylesheet" href="../node_modules/@xterm/xterm/css/xterm.css" />
-  <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <title>Sakura Terminal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/css/xterm.min.css">
+    <style>
+        .ai-selector { padding: 6px; border-bottom: 1px solid #2d2740; }
+        .ai-selector select { width: 100%; background: #1a1626; color: #d4d4d4; border: 1px solid #2d2740; border-radius: 4px; padding: 4px; }
+        #ai-frame { flex: 1; width: 100%; border: none; background: #12101a; }
+    </style>
 </head>
 <body>
-  <div id="titlebar">
-    <span class="tb-label"><span id="roll-petal">🌸</span><span class="tb-letters">
-      <span class="tb-letter">S</span><span class="tb-letter">a</span><span class="tb-letter">k</span>
-      <span class="tb-letter">u</span><span class="tb-letter">r</span><span class="tb-letter">a</span>
-    </span></span>
-    <div id="titlebar-buttons">
-      <button id="btn-toggle-ai" title="Toggle Lumo panel (Ctrl+Space)">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect x="1" y="2" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.5"/>
-          <line x1="10" y1="2" x2="10" y2="14" stroke="currentColor" stroke-width="1.5"/>
-        </svg>
-      </button>
+    <div id="titlebar">
+        <span id="app-title">
+            <img id="sakura-logo" src="../public/Sakura.png" alt="">
+            <span class="tb-letters"><span class="tb-letter">S</span><span class="tb-letter">a</span><span class="tb-letter">k</span><span class="tb-letter">u</span><span class="tb-letter">r</span><span class="tb-letter">a</span></span>
+        </span>
+        <div id="titlebar-buttons"><button id="btn-toggle-ai">AI</button></div>
     </div>
-  </div>
 
-  <div id="workspace">
-    <div id="terminal-container"></div>
-    <div id="pane-divider" class="hidden" title="Drag to resize - double-click to reset"></div>
-    <div id="ai-pane" class="hidden">
-      <webview id="lumo-view" src="https://lumo.proton.me" partition="persist:sakura-lumo" allowpopups></webview>
+    <div id="workspace">
+        <div id="terminal-container"></div>
+        <div id="pane-divider"></div>
+        <div id="ai-pane">
+            <div class="ai-selector">
+                <select id="ai-choice">
+                    <option value="lumo">Lumo AI</option>
+                    <option value="deepseek">DeepSeek</option>
+                </select>
+            </div>
+            <webview id="ai-frame" src="https://lumo.proton.me" allowpopups></webview>
+        </div>
     </div>
-  </div>
 
-  <script src="../node_modules/@xterm/xterm/lib/xterm.js"></script>
-  <script src="../node_modules/@xterm/addon-fit/lib/addon-fit.js"></script>
-  <script src="renderer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/xterm@5.5.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xterm/addon-fit@0.10.0/lib/addon-fit.min.js"></script>
+    <script src="renderer.js"></script>
 </body>
 </html>

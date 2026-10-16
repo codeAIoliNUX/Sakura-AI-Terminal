@@ -7,5 +7,9 @@ contextBridge.exposeInMainWorld("sakura", {
   onData: (cb) => ipcRenderer.on("pty:data", (_e, data) => cb(data)),
   onExit: (cb) => ipcRenderer.on("pty:exit", (_e, code) => cb(code)),
   copyToClipboard: (text) => ipcRenderer.send("clipboard:write", text),
-  readClipboard: () => ipcRenderer.invoke("clipboard:read"),
+  readClipboard: () => ipcRenderer.invoke("clipboard:read")
+});
+
+contextBridge.exposeInMainWorld("api", {
+  openAIWindow: (url) => ipcRenderer.send("open-ai-window", url)
 });

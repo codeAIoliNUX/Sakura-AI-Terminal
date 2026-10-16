@@ -19,7 +19,6 @@ html, body {
 #titlebar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 32px;
   padding: 0 8px;
   background: var(--panel-bg);
@@ -27,7 +26,52 @@ html, body {
   -webkit-app-region: drag;
 }
 
-.tb-label { font-size: 12px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+#app-title {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+}
+
+/* ===== Sakura logo: rolls left to right with spin, 20s ===== */
+#sakura-logo {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  animation: rollAcross 20s cubic-bezier(0.25, 0.8, 0.35, 1) forwards;
+  filter: drop-shadow(0 0 3px rgba(230, 121, 238, 0.6));
+}
+
+@keyframes rollAcross {
+  0%   { transform: translateX(0px) rotate(0deg); opacity: 0; }
+  5%   { opacity: 1; }
+  95%  { opacity: 1; }
+  100% { transform: translateX(90px) rotate(1080deg); opacity: 0; }
+}
+
+.tb-letters { display: inline-flex; }
+
+.tb-letter {
+  display: inline-block;
+  opacity: 0;
+  animation: letterDrop 0.6s ease-out forwards;
+  white-space: nowrap;
+}
+
+/* Letters spread across the 20s timeline */
+.tb-letter:nth-child(1) { animation-delay: 0.5s; }
+.tb-letter:nth-child(2) { animation-delay: 3.5s; }
+.tb-letter:nth-child(3) { animation-delay: 7.0s; }
+.tb-letter:nth-child(4) { animation-delay: 10.5s; }
+.tb-letter:nth-child(5) { animation-delay: 14.0s; }
+.tb-letter:nth-child(6) { animation-delay: 17.5s; }
+
+@keyframes letterDrop {
+  0%   { opacity: 0; transform: translateY(-8px); }
+  60%  { opacity: 1; transform: translateY(2px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
 
 #titlebar-buttons { display: flex; gap: 6px; -webkit-app-region: no-drag; }
 
@@ -50,7 +94,6 @@ html, body {
 
 #terminal-container { flex: 1 1 auto; min-width: 0; padding: 6px; background: var(--bg); }
 
-/* ===== Pane divider ===== */
 #pane-divider {
   flex: 0 0 5px;
   width: 5px;
@@ -74,28 +117,26 @@ html, body {
 
 #ai-pane.hidden { display: none; }
 
-#lumo-view { flex: 1; width: 100%; border: none; }
-
-/* ===== Splash animation ===== */
-.tb-letter { display: inline-block; opacity: 0; animation: letterDrop 0.4s ease-out forwards; }
-.tb-letter:nth-child(1) { animation-delay: 1.70s; }
-.tb-letter:nth-child(2) { animation-delay: 1.85s; }
-.tb-letter:nth-child(3) { animation-delay: 2.00s; }
-.tb-letter:nth-child(4) { animation-delay: 2.15s; }
-.tb-letter:nth-child(5) { animation-delay: 2.30s; }
-.tb-letter:nth-child(6) { animation-delay: 2.45s; }
-
-@keyframes letterDrop {
-  0%   { opacity: 0; transform: translateY(-8px); }
-  60%  { opacity: 1; transform: translateY(2px); }
-  100% { opacity: 1; transform: translateY(0); }
+/* ===== Logo: roll in from the left, then STAY visible ===== */
+#sakura-logo { animation: rollSettle 20s cubic-bezier(0.25, 0.8, 0.35, 1) forwards; }
+@keyframes rollSettle {
+  0%   { transform: translateX(-60px) rotate(0deg); opacity: 0; }
+  8%   { opacity: 1; }
+  100% { transform: translateX(0) rotate(720deg); opacity: 1; }
 }
 
-#roll-petal { display: inline-block; font-size: 14px; animation: petalRoll 1.6s cubic-bezier(0.25, 0.8, 0.4, 1) forwards; }
+/* ===== Titlebar layout fix: title left, AI button pinned right ===== */
+#titlebar { justify-content: space-between; }
+#titlebar-buttons { margin-left: auto; }
 
-@keyframes petalRoll {
-  0%   { transform: translateX(-40px) rotate(0deg); opacity: 0; }
-  10%  { opacity: 1; }
-  85%  { transform: translateX(160px) rotate(720deg); }
-  100% { transform: translateX(0) rotate(1080deg); opacity: 1; }
-}
+/* ===== Faster animation: 5s total ===== */
+#sakura-logo { animation-duration: 5s; }
+.tb-letter:nth-child(1) { animation-delay: 0.15s; }
+.tb-letter:nth-child(2) { animation-delay: 0.9s; }
+.tb-letter:nth-child(3) { animation-delay: 1.65s; }
+.tb-letter:nth-child(4) { animation-delay: 2.4s; }
+.tb-letter:nth-child(5) { animation-delay: 3.15s; }
+.tb-letter:nth-child(6) { animation-delay: 3.9s; }
+
+#titlebar { justify-content: space-between; }
+#titlebar-buttons { margin-left: auto; }
